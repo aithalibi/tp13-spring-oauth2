@@ -1,0 +1,64 @@
+{
+  "realm": "ens-realm",
+  "enabled": true,
+  "displayName": "ENS - TP13 OAuth2",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "roles": {
+    "realm": [
+      { "name": "ETUDIANT", "description": "Etudiant ENS" },
+      { "name": "ENSEIGNANT", "description": "Enseignant ENS" }
+    ]
+  },
+  "defaultRoles": ["ETUDIANT"],
+  "clients": [
+    {
+      "clientId": "spring-oauth-client",
+      "name": "Application Spring TP13",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "5fae9b43-0000-0000-0000-000000000000",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:8080/login/oauth2/code/keycloak"
+      ],
+      "webOrigins": ["http://localhost:8080"],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:8080/*"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "yasmine",
+      "enabled": true,
+      "email": "yasmine.ait@ens.ma",
+      "emailVerified": true,
+      "firstName": "Yasmine",
+      "lastName": "Ait Halibi",
+      "credentials": [
+        { "type": "password", "value": "ens2024", "temporary": false }
+      ],
+      "realmRoles": ["ETUDIANT"]
+    },
+    {
+      "username": "enseignant",
+      "enabled": true,
+      "email": "enseignant@ens.ma",
+      "emailVerified": true,
+      "firstName": "Professeur",
+      "lastName": "ENS",
+      "credentials": [
+        { "type": "password", "value": "ens2024", "temporary": false }
+      ],
+      "realmRoles": ["ENSEIGNANT"]
+    }
+  ]
+}

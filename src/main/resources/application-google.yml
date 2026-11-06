@@ -1,0 +1,18 @@
+# Profil par defaut : Google comme fournisseur d'identite (cf. etape 2 du TP).
+# Les identifiants ne sont JAMAIS commites : ils sont lus dans des variables
+# d'environnement, avec une valeur d'exemple identique a celle du TP.
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:1234567890-abcde.apps.googleusercontent.com}
+            client-secret: ${GOOGLE_CLIENT_SECRET:GOCSPX-XYZ_SecretKey}
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com

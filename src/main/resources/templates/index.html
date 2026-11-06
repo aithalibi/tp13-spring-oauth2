@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil - TP13 OAuth2</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: entete}"></div>
+
+<div class="conteneur">
+    <div class="carte">
+        <h1>Authentification deleguee avec OAuth2 et OpenID Connect</h1>
+        <p class="intro">
+            Cette application ne gere aucun mot de passe. L'authentification est entierement
+            deleguee a un fournisseur d'identite externe (Google, Keycloak ou un fournisseur
+            conforme OIDC), qui delivre un <code>access token</code> et un <code>id token</code>.
+        </p>
+
+        <h2>Comment cela fonctionne</h2>
+        <table class="infos">
+            <tr>
+                <th>1. Redirection</th>
+                <td>Vous accedez a <code>/profile</code>. Spring Security vous redirige vers
+                    l'ecran de connexion du fournisseur.</td>
+            </tr>
+            <tr>
+                <th>2. Authentification</th>
+                <td>Vous saisissez vos identifiants chez le fournisseur &mdash; jamais dans cette
+                    application.</td>
+            </tr>
+            <tr>
+                <th>3. Code d'autorisation</th>
+                <td>Le fournisseur renvoie un <code>code</code> sur
+                    <code>/login/oauth2/code/{registrationId}</code>.</td>
+            </tr>
+            <tr>
+                <th>4. Echange</th>
+                <td>Spring echange ce code contre un <code>access token</code> et un
+                    <code>id token</code> (JWT signe).</td>
+            </tr>
+            <tr>
+                <th>5. Profil</th>
+                <td>Les attributs du <code>id token</code> (nom, email, photo) sont affiches
+                    sur la page profil.</td>
+            </tr>
+        </table>
+
+        <p style="margin-top:26px">
+            <a class="bouton" th:href="@{/profile}">Acceder a mon profil</a>
+        </p>
+    </div>
+</div>
+
+<div th:replace="~{fragments :: pied}"></div>
+</body>
+</html>

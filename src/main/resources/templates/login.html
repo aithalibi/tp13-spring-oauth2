@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion - TP13 OAuth2</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="login-wrapper">
+    <div class="login-boite">
+        <h2>Connexion</h2>
+        <p class="sous-titre">Choisissez votre fournisseur d'identite</p>
+
+        <ul class="liste-fournisseurs">
+            <li th:each="f : ${fournisseurs}">
+                <a th:href="@{'/oauth2/authorization/' + ${f.id}}">
+                    <span class="icone" th:text="${#strings.substring(f.nom,0,1)}">G</span>
+                    <span th:text="${f.nom}">Google</span>
+                </a>
+            </li>
+        </ul>
+
+        <p class="sous-titre" style="margin-top:22px;margin-bottom:0">
+            Vous serez redirige vers le fournisseur : aucun identifiant n'est saisi dans cette application.
+        </p>
+    </div>
+</div>
+</body>
+</html>

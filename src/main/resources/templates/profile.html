@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon profil - TP13 OAuth2</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: entete}"></div>
+
+<div class="conteneur">
+    <div class="carte">
+        <div class="entete-profil">
+            <img class="avatar" th:src="${picture}" th:alt="${name}" onerror="this.src='data:image/svg+xml;utf8,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22160%22&gt;&lt;rect width=%22160%22 height=%22160%22 fill=%22%232b5797%22/&gt;&lt;/svg&gt;'">
+            <div>
+                <h1 th:text="${name} ?: 'Utilisateur authentifie'">Nom</h1>
+                <p class="email" th:text="${email} ?: 'email inconnu'">email</p>
+                <p style="margin:8px 0 0"><span class="puce">Connecte via OAuth2 / OIDC</span></p>
+            </div>
+        </div>
+
+        <h2>Informations issues du jeton d'identite</h2>
+        <table class="infos">
+            <tr>
+                <th>Nom</th>
+                <td th:text="${name} ?: '(non fourni)'">Nom</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td th:text="${email} ?: '(non fourni)'">Email</td>
+            </tr>
+            <tr>
+                <th>Email verifie</th>
+                <td th:text="${emailVerified} != null ? ${emailVerified} : '(non fourni)'">true</td>
+            </tr>
+            <tr>
+                <th>Identifiant (sub)</th>
+                <td><code th:text="${sub} ?: '(non fourni)'">mock|yasmine</code></td>
+            </tr>
+            <tr>
+                <th>Langue</th>
+                <td th:text="${locale} ?: '(non fourni)'">fr</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td style="word-break:break-all"><code th:text="${picture} ?: '(non fournie)'">url</code></td>
+            </tr>
+        </table>
+
+        <h2 style="margin-top:28px">Attributs bruts du OAuth2User</h2>
+        <table class="infos">
+            <tr th:each="attribut : ${attributs}">
+                <th th:text="${attribut.key}">cle</th>
+                <td><code th:text="${attribut.value}">valeur</code></td>
+            </tr>
+        </table>
+
+        <p style="margin-top:26px">
+            <a class="bouton bouton-discret" th:href="@{/}">Retour a l'accueil</a>
+        </p>
+    </div>
+</div>
+
+<div th:replace="~{fragments :: pied}"></div>
+</body>
+</html>

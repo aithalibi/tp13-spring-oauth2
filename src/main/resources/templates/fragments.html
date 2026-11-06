@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="entete" class="entete">
+    <span class="marque">TP13 &middot; OAuth2 / OpenID Connect</span>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/profile}">Mon profil</a>
+        <form th:action="@{/logout}" method="post" th:if="${#authorization.expression('isAuthenticated()')}">
+            <button type="submit" class="bouton-discret" style="border-color:#8fa9cd;color:#eaf1fa;">
+                Se deconnecter
+            </button>
+        </form>
+    </nav>
+</div>
+
+<div th:fragment="pied" class="pied">
+    TP13 &middot; Delegation de l'authentification a un fournisseur d'identite &mdash; Yasmine Ait Halibi
+</div>
+</body>
+</html>

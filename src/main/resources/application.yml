@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: oauth2-client
+  profiles:
+    active: ${APP_PROFILE:google}
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    org.springframework.security: INFO

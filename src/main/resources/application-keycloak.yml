@@ -1,0 +1,20 @@
+# Variante du TP : Keycloak comme Identity Provider local (etape 6).
+# Prerequis : un realm « ens-realm » et un client « spring-oauth-client ».
+# Voir tools/keycloak/ pour le docker-compose et l'import du realm.
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_CLIENT_ID:spring-oauth-client}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:5fae9b43-0000-0000-0000-000000000000}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_ISSUER:http://localhost:8180/realms/ens-realm}

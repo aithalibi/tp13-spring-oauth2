@@ -1,0 +1,121 @@
+﻿TP13 - Verification OAuth2 / OpenID Connect - 2026-11-06 20:16:28
+
+====================================================================
+SCENARIO 1 : Le fournisseur d'identite expose bien la decouverte OIDC
+====================================================================
+  GET http://localhost:9090/.well-known/openid-configuration -> {"issuer":"http://localhost:9090","authorization_endpoint":"http://localhost:909...
+  issuer              = http://localhost:9090
+  authorization_endpoint = http://localhost:9090/authorize
+  token_endpoint         = http://localhost:9090/token
+  jwks_uri               = http://localhost:9090/jwks
+  alg de signature       = RS256
+  [OK]   issuer = http://localhost:9090
+  [OK]   authorization_endpoint = http://localhost:9090/authorize
+
+====================================================================
+SCENARIO 2 : La page d'accueil est publique
+====================================================================
+  GET / -> 200
+  [OK]   GET / = 200
+
+====================================================================
+SCENARIO 3 : La feuille de style est publique
+====================================================================
+  GET /css/style.css -> 200
+  [OK]   GET /css/style.css = 200
+
+====================================================================
+SCENARIO 4 : /profile est protege : redirection vers la page de connexion
+====================================================================
+  GET /profile -> 302
+  Location      -> Location: http://localhost:8080/login
+  [OK]   GET /profile code = 302
+  [OK]   GET /profile redirige vers /login
+
+====================================================================
+SCENARIO 5 : La page de connexion liste les fournisseurs declares
+====================================================================
+  GET /login -> 200
+  [OK]   GET /login code = 200
+  liens de delegation detectes : oauth2/authorization/mock
+  [OK]   lien vers le fournisseur mock
+
+====================================================================
+SCENARIO 6 : L'entree /oauth2/authorization/mock redirige vers le fournisseur
+====================================================================
+  GET /oauth2/authorization/mock -> 302
+  Location -> Location: http://localhost:9090/authorize?response_type=code&client_id=mock-oauth-client&scope=openid%20profile%20email&state=EjjEPpFKwMdv2dtsCAYph1xg
+  [OK]   code de redirection = 302
+  [OK]   response_type=code
+  [OK]   client_id
+  [OK]   scope=openid
+  [OK]   parametre state (anti-CSRF)
+  [OK]   redirect_uri
+
+====================================================================
+SCENARIO 7 : Le fournisseur affiche le selecteur de compte
+====================================================================
+  GET http://localhost:9090/authorize?response_type=code&client_id... -> 200
+  [OK]   page du fournisseur = 200
+  [OK]   titre de la page
+  [OK]   compte 1 (yasmine)
+  [OK]   compte 2 (etudiant)
+
+====================================================================
+SCENARIO 8 : Le fournisseur renvoie un code d'autorisation sur le redirect_uri
+====================================================================
+  GET ...&login=yasmine -> 302
+  Location -> Location: http://localhost:8080/login/oauth2/code/mock?code=94cd5a54bec87932200141fb1851cfc9&state=EjjEPpFKwMdv2dtsCAYph1xgyxmxzJ8Hg5n5IHfXEyQ%3D
+  [OK]   redirection vers le callback Spring Security
+  [OK]   parametre code present
+
+====================================================================
+SCENARIO 9 : Spring echange le code contre un id_token et ouvre une session
+====================================================================
+  GET /login/oauth2/code/mock?code=... -> 302
+  Location -> Location: http://localhost:8080/profile
+  Set-Cookie -> JSESSIONID=... (session creee)
+  [OK]   redirection vers /profile (defaultSuccessUrl)
+  [OK]   cookie de session emis
+
+====================================================================
+SCENARIO 10 : /profile affiche les attributs du jeton d'identite
+====================================================================
+  GET /profile (avec session) -> 200
+  [OK]   code = 200
+  [OK]   nom issu du id_token
+  [OK]   email issu du id_token
+  [OK]   claim sub
+  [OK]   badge OAuth2/OIDC
+  [OK]   claim iss = http://localhost:9090
+
+====================================================================
+SCENARIO 11 : Le bouton de deconnexion invalide la session
+====================================================================
+  Jeton CSRF extrait de /profile : EiXz225uMe9_...
+  POST /logout (avec jeton CSRF) -> 302
+  Location -> Location: http://localhost:8080/
+  [OK]   retour a l'accueil
+  GET /profile apres deconnexion -> 302
+  [OK]   session invalidee : /profile reprotege = 302
+
+====================================================================
+SCENARIO 12 : Un second compte obtient un profil different
+====================================================================
+  Compte 'etudiant' -> profil :
+    nom   = Etudiant ENS        present : True
+    email = etudiant@ens.ma     present : True
+    sub   = mock|etudiant       present : True
+  [OK]   nom du 2e compte
+  [OK]   email du 2e compte
+
+====================================================================
+SCENARIO 13 : Aucun mot de passe n'est gere par l'application
+====================================================================
+  Occurrences de 'password' dans src/main : 0
+  (aucune page de login locale, aucun PasswordEncoder, aucune table d'utilisateurs)
+  [OK]   pas d'authentification locale = 0
+
+====================================================================
+TOUS LES SCENARIOS SONT PASSES
+====================================================================

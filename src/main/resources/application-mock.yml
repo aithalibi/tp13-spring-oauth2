@@ -1,0 +1,22 @@
+# Profil de verification locale : utilise un fournisseur OpenID Connect
+# minimal (tools/mock-idp/server.js) qui implemente exactement les memes
+# points OIDC que Google/Keycloak (decouverte, jwks, authorize, token, userinfo).
+# Objectif : pouvoir demontrer et tester le flux complet sans identifiants reels.
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          mock:
+            client-id: mock-oauth-client
+            client-secret: mock-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: Mock IdP (verification locale)
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          mock:
+            issuer-uri: http://localhost:9090
